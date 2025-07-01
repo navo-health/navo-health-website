@@ -35,19 +35,28 @@ const Journey = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const section = document.getElementById('journey');
-      if (section) {
-        const rect = section.getBoundingClientRect();
-        const sectionHeight = rect.height;
-        const scrollProgress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / sectionHeight));
+      const timeline = document.getElementById('journey-timeline');
+      if (timeline) {
+        const rect = timeline.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        // Animate as the timeline scrolls through the vertical center of the viewport.
+        // Progress is 0 when the top of the timeline reaches the center,
+        // and 1 when the bottom of the timeline reaches the center.
+        const triggerPoint = viewportHeight / 2;
+        const progress = (triggerPoint - rect.top) / rect.height;
+        const scrollProgress = Math.max(0, Math.min(1, progress));
+
         const step = Math.floor(scrollProgress * journeySteps.length);
         setActiveStep(Math.min(step, journeySteps.length - 1));
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Set initial state on mount
+
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [journeySteps.length]);
 
   return (
     <section id="journey" className="py-20 bg-gradient-to-br from-teal-50 to-white">
@@ -63,58 +72,69 @@ const Journey = () => {
         </div>
 
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
             {/* Timeline */}
-            <div className="space-y-8">
+            <div id="journey-timeline" className="space-y-12">
               {journeySteps.map((step, index) => (
                 <div 
                   key={index}
-                  className={`flex items-start space-x-4 transition-all duration-500 ${
-                    index <= activeStep ? 'opacity-100 translate-x-0' : 'opacity-50 translate-x-4'
+                  className={`flex items-start space-x-6 transition-all duration-500 ${
+                    index === activeStep ? 'opacity-100' : 'opacity-50'
                   }`}
                 >
-                  <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center font-bold text-white transition-all duration-500 ${
-                    index <= activeStep ? 'bg-teal-600 scale-110' : 'bg-gray-400'
+                  <div className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center font-bold text-white text-2xl transition-all duration-500 ${
+                    index === activeStep ? 'bg-teal-600 scale-110' : 'bg-gray-400'
                   }`}>
                     {index + 1}
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
                       {step.title}
                     </h3>
-                    <p className="text-gray-600 mb-2">
+                    <p className="text-gray-600">
                       {step.description}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {step.details}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Active Step Card */}
-            <div className="lg:sticky lg:top-20">
-              <Card className="shadow-2xl border-0 bg-white">
-                <CardContent className="p-8">
-                  <div className="text-center">
-                    <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <span className="text-2xl font-bold text-teal-600">
-                        {activeStep + 1}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                      {journeySteps[activeStep].title}
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      {journeySteps[activeStep].description}
-                    </p>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      {journeySteps[activeStep].details}
-                    </p>
+            {/* Animated Cards */}
+            <div className="lg:sticky lg:top-24 h-[450px]">
+              <div className="relative w-full h-full">
+                {journeySteps.map((step, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                      index === activeStep
+                        ? 'opacity-100 translate-y-0'
+                        : index < activeStep
+                        ? 'opacity-0 -translate-y-10'
+                        : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{ transformOrigin: 'center' }}
+                  >
+                    <Card className="shadow-2xl border-0 bg-white h-full w-full">
+                      <CardContent className="p-8 flex flex-col justify-center items-center text-center h-full">
+                        <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                          <span className="text-3xl font-bold text-teal-600">
+                            {index + 1}
+                          </span>
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                          {step.title}
+                        </h3>
+                        <p className="text-lg text-gray-600 mb-6">
+                          {step.description}
+                        </p>
+                        <p className="text-base text-gray-500 leading-relaxed">
+                          {step.details}
+                        </p>
+                      </CardContent>
+                    </Card>
                   </div>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
             </div>
           </div>
         </div>
