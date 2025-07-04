@@ -192,12 +192,20 @@ const Journey = () => {
               </div>
             </div>
           </div>
-          {/* Diagram (right) */}
+          {/* Diagram (right) - fallback image on mobile, Mermaid diagram on md+ */}
           <div className={`flex-1 min-w-[250px] max-w-md mx-auto lg:mx-0 order-2 lg:order-none flex flex-col items-center justify-center transition-all duration-700 opacity-0 translate-y-8 ${visible ? 'animate-fade-in-hero delay-[800ms] opacity-100 translate-y-0' : ''}`}>
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="w-full rounded-xl shadow-lg bg-white p-4 border border-teal-100 hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
-                  <MermaidDiagram chart={`flowchart TD
+            {/* Mobile: fallback image */}
+            <img
+              src="/lovable-uploads/mermaid-diagram-fallback.png"
+              alt="Navo AI Stack Diagram"
+              className="block md:hidden w-full max-w-xs rounded-lg border border-gray-200 shadow-lg mb-2"
+            />
+            {/* Desktop: interactive Mermaid diagram */}
+            <div className="hidden md:block w-full">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="w-full rounded-xl shadow-lg bg-white p-4 border border-teal-100 hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
+                    <MermaidDiagram chart={`flowchart TD
   subgraph Preprocessing & Model Training
     A1["Representative Data Split"]
     A2["Feature Selection"]
@@ -241,12 +249,12 @@ const Journey = () => {
   class C1,C2,C3 purple;
   class D1,D2 gray;
 `} />
-                </button>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl w-full">
-                <DialogTitle>Navo AI Stack & Report Generation Pipeline</DialogTitle>
-                <div className="w-full max-h-[70vh] overflow-auto">
-                  <MermaidDiagram chart={`flowchart TD
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl w-full">
+                  <DialogTitle>Navo AI Stack & Report Generation Pipeline</DialogTitle>
+                  <div className="w-full max-h-[70vh] overflow-auto">
+                    <MermaidDiagram chart={`flowchart TD
   subgraph Preprocessing & Model Training
     A1["Representative Data Split"]
     A2["Feature Selection"]
@@ -290,10 +298,11 @@ const Journey = () => {
   class C1,C2,C3 purple;
   class D1,D2 gray;
 `} />
-                </div>
-              </DialogContent>
-            </Dialog>
-            <div className="text-gray-500 text-sm mt-2 text-center">Click to enlarge: Navo AI Stack &amp; Report Generation Pipeline</div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <div className="text-gray-500 text-sm mt-2 text-center">Click to enlarge: Navo AI Stack &amp; Report Generation Pipeline</div>
+            </div>
           </div>
         </div>
       </div>
