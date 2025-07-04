@@ -19,13 +19,23 @@ function MermaidDiagram({ chart }: { chart: string }) {
       mermaid.render(id, chart)
         .then(({ svg }) => {
           ref.current!.innerHTML = svg;
-          // Make SVG responsive
+          // Make SVG responsive and smaller
           const svgEl = ref.current!.querySelector('svg');
           if (svgEl) {
             svgEl.setAttribute('width', '100%');
             svgEl.setAttribute('height', '100%');
             svgEl.style.maxWidth = '100%';
             svgEl.style.height = 'auto';
+            // Inject style for smaller nodes and text
+            const style = document.createElement('style');
+            style.innerHTML = `
+              .node rect, .node polygon, .node ellipse { rx: 8px !important; }
+              .node text { font-size: 10px !important; }
+              .label { font-size: 10px !important; }
+              .edgeLabel { font-size: 9px !important; }
+              svg { font-size: 10px !important; }
+            `;
+            svgEl.appendChild(style);
           }
         })
         .catch((err) => {
