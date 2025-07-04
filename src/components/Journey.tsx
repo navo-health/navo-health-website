@@ -192,8 +192,8 @@ const Journey = () => {
               </div>
             </div>
           </div>
-          {/* Diagram (right) */}
-          <div className={`flex-1 min-w-[250px] max-w-md mx-auto lg:mx-0 order-2 lg:order-none flex flex-col items-center justify-center transition-all duration-700 opacity-0 translate-y-8 ${visible ? 'animate-fade-in-hero delay-[800ms] opacity-100 translate-y-0' : ''}`}>
+          {/* Diagram (right, hidden on mobile) */}
+          <div className={`hidden md:flex flex-1 min-w-[250px] max-w-md mx-auto lg:mx-0 order-2 lg:order-none flex-col items-center justify-center transition-all duration-700 opacity-0 translate-y-8 ${visible ? 'animate-fade-in-hero delay-[800ms] opacity-100 translate-y-0' : ''}`}>
             <Dialog>
               <DialogTrigger asChild>
                 <button className="w-full rounded-xl shadow-lg bg-white p-4 border border-teal-100 hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
