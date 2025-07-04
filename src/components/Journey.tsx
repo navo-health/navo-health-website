@@ -1,102 +1,61 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import mermaid from 'mermaid';
+import ReactFlow, { Background, Controls, MiniMap, MarkerType } from 'react-flow-renderer';
 import { useRef } from 'react';
 import React from 'react';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { MapTrifold } from "@phosphor-icons/react";
 
-// Interactive Mermaid Diagram with reset zoom
-function MermaidDiagram({ chart }: { chart: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    if (ref.current) {
-      mermaid.initialize({ startOnLoad: false });
-      const id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
-      setError(null);
-      mermaid.render(id, chart)
-        .then(({ svg }) => {
-          ref.current!.innerHTML = svg;
-          // Make SVG responsive and smaller
-          const svgEl = ref.current!.querySelector('svg');
-          if (svgEl) {
-            svgEl.setAttribute('width', '100%');
-            svgEl.setAttribute('height', '100%');
-            svgEl.style.maxWidth = '100%';
-            svgEl.style.height = 'auto';
-            // Inject style for smaller nodes and text
-            const style = document.createElement('style');
-            style.innerHTML = `
-              .node rect, .node polygon, .node ellipse { rx: 8px !important; }
-              .node text { font-size: 10px !important; }
-              .label { font-size: 10px !important; }
-              .edgeLabel { font-size: 9px !important; }
-              svg { font-size: 10px !important; }
-            `;
-            svgEl.appendChild(style);
-          }
-        })
-        .catch((err) => {
-          setError('Diagram could not be rendered. Please try on a larger screen or check diagram syntax.');
-        });
-    }
-  }, [chart]);
+// React Flow diagram nodes and edges (static layout for now)
+const rfNodes = [
+  { id: 'A1', data: { label: 'Representative Data Split' }, position: { x: 0, y: 0 }, style: { background: '#14b8a6', color: '#fff' } },
+  { id: 'A2', data: { label: 'Feature Selection' }, position: { x: 220, y: 0 }, style: { background: '#14b8a6', color: '#fff' } },
+  { id: 'A3', data: { label: 'Hyperparameter Tuning' }, position: { x: 440, y: 0 }, style: { background: '#14b8a6', color: '#fff' } },
+  { id: 'A4', data: { label: 'Model Training' }, position: { x: 660, y: 0 }, style: { background: '#14b8a6', color: '#fff' } },
+  { id: 'A5', data: { label: 'Metrics & Monitoring' }, position: { x: 880, y: 0 }, style: { background: '#14b8a6', color: '#fff' } },
+  { id: 'B1', data: { label: 'Model Predictions' }, position: { x: 880, y: 120 }, style: { background: '#38bdf8', color: '#fff' } },
+  { id: 'B2', data: { label: 'SHAP Analysis' }, position: { x: 880, y: 240 }, style: { background: '#38bdf8', color: '#fff' } },
+  { id: 'C1', data: { label: 'Knowledge Base' }, position: { x: 660, y: 360 }, style: { background: '#a78bfa', color: '#fff' } },
+  { id: 'C2', data: { label: 'Top Feature Extraction' }, position: { x: 440, y: 360 }, style: { background: '#a78bfa', color: '#fff' } },
+  { id: 'C3', data: { label: 'Retrieval Augmented Generation' }, position: { x: 220, y: 360 }, style: { background: '#a78bfa', color: '#fff' } },
+  { id: 'D1', data: { label: 'Report Generation' }, position: { x: 0, y: 480 }, style: { background: '#f1f5f9', color: '#334155' } },
+  { id: 'D2', data: { label: 'Users are given a report with citations for more well informed decision-making' }, position: { x: 220, y: 480 }, style: { background: '#f1f5f9', color: '#334155', fontSize: 12, width: 260 } },
+];
+const rfEdges = [
+  { id: 'A1-A2', source: 'A1', target: 'A2', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#0f766e' }, style: { strokeWidth: 2, stroke: '#0f766e' } },
+  { id: 'A2-A3', source: 'A2', target: 'A3', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#0f766e' }, style: { strokeWidth: 2, stroke: '#0f766e' } },
+  { id: 'A3-A4', source: 'A3', target: 'A4', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#0f766e' }, style: { strokeWidth: 2, stroke: '#0f766e' } },
+  { id: 'A4-A5', source: 'A4', target: 'A5', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#0f766e' }, style: { strokeWidth: 2, stroke: '#0f766e' } },
+  { id: 'A5-B1', source: 'A5', target: 'B1', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#0ea5e9' }, style: { strokeWidth: 2, stroke: '#0ea5e9' } },
+  { id: 'B1-B2', source: 'B1', target: 'B2', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#0ea5e9' }, style: { strokeWidth: 2, stroke: '#0ea5e9' } },
+  { id: 'B2-C2', source: 'B2', target: 'C2', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#7c3aed' }, style: { strokeWidth: 2, stroke: '#7c3aed' } },
+  { id: 'C2-C3', source: 'C2', target: 'C3', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#7c3aed' }, style: { strokeWidth: 2, stroke: '#7c3aed' } },
+  { id: 'C3-D1', source: 'C3', target: 'D1', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#334155' }, style: { strokeWidth: 2, stroke: '#334155' } },
+  { id: 'D1-D2', source: 'D1', target: 'D2', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#334155' }, style: { strokeWidth: 2, stroke: '#334155' } },
+  { id: 'C1-C2', source: 'C1', target: 'C2', markerEnd: { type: MarkerType.ArrowClosed, width: 32, height: 32, color: '#7c3aed' }, style: { strokeWidth: 2, stroke: '#7c3aed' } },
+];
+
+function ReactFlowDiagram() {
   return (
-    <div style={{ width: '100%', overflowX: 'auto', minHeight: 120 }} className="bg-white rounded-lg border border-gray-100 p-2 shadow-sm">
-      {error ? (
-        <div className="text-red-500 text-center text-sm py-4">{error}</div>
-      ) : null}
-      <div ref={ref} style={{ display: error ? 'none' : undefined }} />
+    <div style={{ width: '100%', height: 400, background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', boxShadow: '0 2px 8px #0001', padding: 8 }}>
+      <ReactFlow
+        nodes={rfNodes}
+        edges={rfEdges}
+        fitView
+        panOnDrag
+        zoomOnScroll
+        minZoom={0.5}
+        maxZoom={1.5}
+        proOptions={{ hideAttribution: true, account: '' }}
+      >
+        <MiniMap />
+        <Controls />
+        <Background gap={16} color="#e5e7eb" />
+      </ReactFlow>
     </div>
   );
 }
-
-// Use a left-aligned, non-indented, validated Mermaid chart string
-const mermaidChart = `flowchart TD
-subgraph Preprocessing & Model Training
-A1["Representative Data Split"]
-A2["Feature Selection"]
-A3["Hyperparameter Tuning"]
-A4["Model Training"]
-A5["Metrics & Monitoring"]
-A1 --> A2
-A2 --> A3
-A3 --> A4
-A4 --> A5
-end
-subgraph Health Classification
-B1["Model Predictions"]
-B2["SHAP Analysis"]
-B1 --> B2
-end
-subgraph Context Creation
-C1["Knowledge Base"]
-C2["Top Feature Extraction"]
-C3["Retrieval Augmented Generation"]
-C1 --> C2
-C2 --> C3
-end
-subgraph Final Output
-D1["Report Generation"]
-D2["Users are given a report with citations for more well informed decision-making"]
-D1 --> D2
-end
-A5 --> B1
-B2 --> C2
-C3 --> D1
-
-%% Custom node styles for cohesion
-classDef teal fill:#14b8a6,color:#fff,stroke:#0f766e,stroke-width:2px;
-classDef blue fill:#38bdf8,color:#fff,stroke:#0ea5e9,stroke-width:2px;
-classDef purple fill:#a78bfa,color:#fff,stroke:#7c3aed,stroke-width:2px;
-classDef gray fill:#f1f5f9,color:#334155,stroke:#cbd5e1,stroke-width:2px;
-
-class A1,A2,A3,A4,A5 teal;
-class B1,B2 blue;
-class C1,C2,C3 purple;
-class D1,D2 gray;`;
 
 const Journey = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -250,13 +209,13 @@ const Journey = () => {
             <Dialog>
               <DialogTrigger asChild>
                 <button className="w-full rounded-xl shadow-lg bg-white p-4 border border-teal-100 hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
-                  <MermaidDiagram chart={mermaidChart} />
+                  <ReactFlowDiagram />
                 </button>
               </DialogTrigger>
               <DialogContent className="max-w-4xl w-full">
                 <DialogTitle>Navo AI Stack & Report Generation Pipeline</DialogTitle>
                 <div className="w-full max-h-[70vh] overflow-auto">
-                  <MermaidDiagram chart={mermaidChart} />
+                  <ReactFlowDiagram />
                 </div>
               </DialogContent>
             </Dialog>
