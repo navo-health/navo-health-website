@@ -27,11 +27,12 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-teal-100 overflow-hidden font-manrope">
-      {/* Floating 3D App Image */}
+      {/* Floating 3D App Image: Desktop absolute, Mobile inline */}
+      {/* Desktop (md+) */}
       <img
         src="/lovable-uploads/navo-app.jpg"
         alt="Navo App Preview"
-        className="block absolute right-2 bottom-2 sm:right-8 sm:bottom-0 md:right-12 md:bottom-8 lg:right-24 lg:bottom-12 w-32 sm:w-48 md:w-64 lg:w-80 xl:w-[28rem] z-0 drop-shadow-2xl pointer-events-none select-none"
+        className="hidden md:block absolute right-8 bottom-0 md:right-12 md:bottom-8 lg:right-24 lg:bottom-12 w-48 md:w-64 lg:w-80 xl:w-[28rem] z-0 drop-shadow-2xl pointer-events-none select-none"
         style={{
           transform: 'perspective(1200px) rotateY(-24deg) rotateX(18deg) scale(1.08)',
           animation: 'floatApp 4.5s ease-in-out infinite',
@@ -65,6 +66,17 @@ const Hero = () => {
             </div>
           </div>
         </div>
+
+        {/* Mobile App Image (below card, above buttons) */}
+        <img
+          src="/lovable-uploads/navo-app.jpg"
+          alt="Navo App Preview"
+          className="block md:hidden mx-auto my-6 w-48 max-w-xs drop-shadow-2xl pointer-events-none select-none"
+          style={{
+            transform: 'perspective(900px) rotateY(-18deg) rotateX(12deg) scale(1)',
+            animation: 'floatApp 4.5s ease-in-out infinite',
+          }}
+        />
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 opacity-0 translate-y-8 animate-fade-in-hero delay-[500ms]">
