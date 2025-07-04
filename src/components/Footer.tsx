@@ -7,7 +7,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img 
-                src="/lovable-uploads/a2b4c7a5-f642-4e94-a589-da4d88b8fc8a.png" 
+                src="/lovable-uploads/navo-logo.png" 
                 alt="Navo Logo" 
                 className="w-8 h-8 mr-2"
               />
@@ -50,7 +50,7 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-          <p>&copy; 2024 Navo. All rights reserved. | Empowering clinicians with AI-driven fetal health insights.</p>
+          <p>&copy; 2025 Navo. All rights reserved. | Empowering clinicians with AI-driven fetal health insights.</p>
         </div>
       </div>
     </footer>

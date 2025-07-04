@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { RocketLaunch, ChatCircleDots } from "@phosphor-icons/react";
 
 const CTA = () => {
   return (
@@ -15,10 +16,12 @@ const CTA = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" variant="secondary" className="bg-white text-teal-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+            <Button size="lg" variant="secondary" className="bg-white text-teal-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2">
+              <RocketLaunch className="w-6 h-6 mr-2" weight="duotone" />
               Request Demo
             </Button>
-            <Button size="lg" variant="ghost" className="text-white border-white border-2 hover:bg-white hover:text-teal-600 px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105">
+            <Button size="lg" variant="ghost" className="text-white border-white border-2 hover:bg-white hover:text-teal-600 px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
+              <ChatCircleDots className="w-6 h-6 mr-2" weight="duotone" />
               Contact Sales
             </Button>
           </div>
