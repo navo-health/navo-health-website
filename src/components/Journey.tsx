@@ -15,10 +15,8 @@ function MermaidDiagram({ chart }: { chart: string }) {
     if (ref.current) {
       mermaid.initialize({ startOnLoad: false });
       const id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
-      // Dedent and trim chart string
-      const dedented = chart.replace(/^\s+/gm, '').trim();
       setError(null);
-      mermaid.render(id, dedented)
+      mermaid.render(id, chart)
         .then(({ svg }) => {
           ref.current!.innerHTML = svg;
           // Make SVG responsive
@@ -44,6 +42,51 @@ function MermaidDiagram({ chart }: { chart: string }) {
     </div>
   );
 }
+
+// Use a left-aligned, non-indented, validated Mermaid chart string
+const mermaidChart = `flowchart TD
+subgraph Preprocessing & Model Training
+A1["Representative Data Split"]
+A2["Feature Selection"]
+A3["Hyperparameter Tuning"]
+A4["Model Training"]
+A5["Metrics & Monitoring"]
+A1 --> A2
+A2 --> A3
+A3 --> A4
+A4 --> A5
+end
+subgraph Health Classification
+B1["Model Predictions"]
+B2["SHAP Analysis"]
+B1 --> B2
+end
+subgraph Context Creation
+C1["Knowledge Base"]
+C2["Top Feature Extraction"]
+C3["Retrieval Augmented Generation"]
+C1 --> C2
+C2 --> C3
+end
+subgraph Final Output
+D1["Report Generation"]
+D2["Users are given a report with citations for more well informed decision-making"]
+D1 --> D2
+end
+A5 --> B1
+B2 --> C2
+C3 --> D1
+
+%% Custom node styles for cohesion
+classDef teal fill:#14b8a6,color:#fff,stroke:#0f766e,stroke-width:2px;
+classDef blue fill:#38bdf8,color:#fff,stroke:#0ea5e9,stroke-width:2px;
+classDef purple fill:#a78bfa,color:#fff,stroke:#7c3aed,stroke-width:2px;
+classDef gray fill:#f1f5f9,color:#334155,stroke:#cbd5e1,stroke-width:2px;
+
+class A1,A2,A3,A4,A5 teal;
+class B1,B2 blue;
+class C1,C2,C3 purple;
+class D1,D2 gray;`;
 
 const Journey = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -197,99 +240,13 @@ const Journey = () => {
             <Dialog>
               <DialogTrigger asChild>
                 <button className="w-full rounded-xl shadow-lg bg-white p-4 border border-teal-100 hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
-                  <MermaidDiagram chart={`flowchart TD
-  subgraph Preprocessing & Model Training
-    A1["Representative Data Split"]
-    A2["Feature Selection"]
-    A3["Hyperparameter Tuning"]
-    A4["Model Training"]
-    A5["Metrics & Monitoring"]
-    A1 --> A2
-    A2 --> A3
-    A3 --> A4
-    A4 --> A5
-  end
-  subgraph Health Classification
-    B1["Model Predictions"]
-    B2["SHAP Analysis"]
-    B1 --> B2
-  end
-  subgraph Context Creation
-    C1["Knowledge Base"]
-    C2["Top Feature Extraction"]
-    C3["Retrieval Augmented Generation"]
-    C1 --> C2
-    C2 --> C3
-  end
-  subgraph Final Output
-    D1["Report Generation"]
-    D2["Users are given a report with citations for more well informed decision-making"]
-    D1 --> D2
-  end
-  A5 --> B1
-  B2 --> C2
-  C3 --> D1
-
-  %% Custom node styles for cohesion
-  classDef teal fill:#14b8a6,color:#fff,stroke:#0f766e,stroke-width:2px;
-  classDef blue fill:#38bdf8,color:#fff,stroke:#0ea5e9,stroke-width:2px;
-  classDef purple fill:#a78bfa,color:#fff,stroke:#7c3aed,stroke-width:2px;
-  classDef gray fill:#f1f5f9,color:#334155,stroke:#cbd5e1,stroke-width:2px;
-
-  class A1,A2,A3,A4,A5 teal;
-  class B1,B2 blue;
-  class C1,C2,C3 purple;
-  class D1,D2 gray;
-`} />
+                  <MermaidDiagram chart={mermaidChart} />
                 </button>
               </DialogTrigger>
               <DialogContent className="max-w-4xl w-full">
                 <DialogTitle>Navo AI Stack & Report Generation Pipeline</DialogTitle>
                 <div className="w-full max-h-[70vh] overflow-auto">
-                  <MermaidDiagram chart={`flowchart TD
-  subgraph Preprocessing & Model Training
-    A1["Representative Data Split"]
-    A2["Feature Selection"]
-    A3["Hyperparameter Tuning"]
-    A4["Model Training"]
-    A5["Metrics & Monitoring"]
-    A1 --> A2
-    A2 --> A3
-    A3 --> A4
-    A4 --> A5
-  end
-  subgraph Health Classification
-    B1["Model Predictions"]
-    B2["SHAP Analysis"]
-    B1 --> B2
-  end
-  subgraph Context Creation
-    C1["Knowledge Base"]
-    C2["Top Feature Extraction"]
-    C3["Retrieval Augmented Generation"]
-    C1 --> C2
-    C2 --> C3
-  end
-  subgraph Final Output
-    D1["Report Generation"]
-    D2["Users are given a report with citations for more well informed decision-making"]
-    D1 --> D2
-  end
-  A5 --> B1
-  B2 --> C2
-  C3 --> D1
-
-  %% Custom node styles for cohesion
-  classDef teal fill:#14b8a6,color:#fff,stroke:#0f766e,stroke-width:2px;
-  classDef blue fill:#38bdf8,color:#fff,stroke:#0ea5e9,stroke-width:2px;
-  classDef purple fill:#a78bfa,color:#fff,stroke:#7c3aed,stroke-width:2px;
-  classDef gray fill:#f1f5f9,color:#334155,stroke:#cbd5e1,stroke-width:2px;
-
-  class A1,A2,A3,A4,A5 teal;
-  class B1,B2 blue;
-  class C1,C2,C3 purple;
-  class D1,D2 gray;
-`} />
+                  <MermaidDiagram chart={mermaidChart} />
                 </div>
               </DialogContent>
             </Dialog>
