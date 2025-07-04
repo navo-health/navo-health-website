@@ -27,11 +27,11 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-white to-teal-100 overflow-hidden font-manrope">
-      {/* Floating 3D App Image */}
+      {/* Desktop: floating absolute */}
       <img
         src="/lovable-uploads/navo-app.jpg"
         alt="Navo App Preview"
-        className="hidden md:block absolute right-8 bottom-0 md:right-12 md:bottom-8 lg:right-24 lg:bottom-12 w-48 md:w-64 lg:w-80 xl:w-[28rem] z-0 drop-shadow-2xl pointer-events-none select-none"
+        className="hidden md:block absolute right-12 bottom-8 lg:right-24 lg:bottom-12 w-64 lg:w-80 xl:w-[28rem] z-0 drop-shadow-2xl pointer-events-none select-none"
         style={{
           transform: 'perspective(1200px) rotateY(-24deg) rotateX(18deg) scale(1.08)',
           animation: 'floatApp 4.5s ease-in-out infinite',
@@ -64,6 +64,19 @@ const Hero = () => {
               We are a health technology company focused on transforming prenatal care through AI. Navo is developing a clinical decision-support tool, a CTG (Cardiotocography) foetal health classifier, to assist healthcare providers in identifying, monitoring, and managing risks during pregnancy and labour.
             </div>
           </div>
+        </div>
+
+        {/* Mobile: app image below card, above CTA */}
+        <div className="md:hidden w-full flex justify-center mb-8 mt-2">
+          <img
+            src="/lovable-uploads/navo-app.jpg"
+            alt="Navo App Preview"
+            className="w-40 xs:w-48 sm:w-56 rounded-xl drop-shadow-2xl pointer-events-none select-none"
+            style={{
+              transform: 'perspective(1200px) rotateY(-24deg) rotateX(18deg) scale(1.08)',
+              animation: 'floatApp 4.5s ease-in-out infinite',
+            }}
+          />
         </div>
 
         {/* CTA Buttons */}

@@ -10,28 +10,37 @@ import { MapTrifold } from "@phosphor-icons/react";
 // Interactive Mermaid Diagram with reset zoom
 function MermaidDiagram({ chart }: { chart: string }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     if (ref.current) {
       mermaid.initialize({ startOnLoad: false });
       const id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
-      mermaid.render(id, chart).then(({ svg }) => {
-        ref.current!.innerHTML = svg;
-        // Make SVG responsive
-        const svgEl = ref.current!.querySelector('svg');
-        if (svgEl) {
-          svgEl.setAttribute('width', '100%');
-          svgEl.setAttribute('height', '100%'); // Set to valid value
-          svgEl.style.maxWidth = '100%';
-          svgEl.style.height = 'auto';
-        }
-      });
+      // Dedent and trim chart string
+      const dedented = chart.replace(/^\s+/gm, '').trim();
+      setError(null);
+      mermaid.render(id, dedented)
+        .then(({ svg }) => {
+          ref.current!.innerHTML = svg;
+          // Make SVG responsive
+          const svgEl = ref.current!.querySelector('svg');
+          if (svgEl) {
+            svgEl.setAttribute('width', '100%');
+            svgEl.setAttribute('height', '100%');
+            svgEl.style.maxWidth = '100%';
+            svgEl.style.height = 'auto';
+          }
+        })
+        .catch((err) => {
+          setError('Diagram could not be rendered. Please try on a larger screen or check diagram syntax.');
+        });
     }
   }, [chart]);
-  // Note: For full pan/zoom, consider integrating svg-pan-zoom or d3-zoom
   return (
-    <div style={{ width: '100%', overflowX: 'auto' }}>
-      <div ref={ref} />
-      {/* Placeholder for future interactive controls */}
+    <div style={{ width: '100%', overflowX: 'auto', minHeight: 120 }} className="bg-white rounded-lg border border-gray-100 p-2 shadow-sm">
+      {error ? (
+        <div className="text-red-500 text-center text-sm py-4">{error}</div>
+      ) : null}
+      <div ref={ref} style={{ display: error ? 'none' : undefined }} />
     </div>
   );
 }
